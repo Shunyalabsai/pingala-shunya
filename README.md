@@ -74,9 +74,7 @@ pip install "pingala-shunya[complete]"
 
 ### Custom Models (Advanced Users)
 - Any Hugging Face Seq2Seq model compatible with automatic-speech-recognition pipeline
-- `distil-whisper/distil-large-v2` - Distilled model (6x faster)
-- `distil-whisper/distil-medium.en` - English-only distilled model
-- `microsoft/speecht5_asr` - Microsoft's speech recognition model
+- Local model paths supported
 
 ### Local Models
 - `/path/to/local/model` - Local model directory or file
@@ -108,8 +106,7 @@ transcriber_ct2 = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbat
 transcriber_tf = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim", backend="transformers")  
 
 # Auto-detection (recommended)
-transcriber_auto = PingalaTranscriber(model_name="distil-whisper/distil-large-v2")  # Uses transformers
-transcriber_auto2 = PingalaTranscriber()  # Uses default Shunya Labs model with ct2
+transcriber_auto = PingalaTranscriber()  # Uses default Shunya Labs model with ct2
 ```
 
 ### Advanced Usage with All Features
@@ -158,19 +155,19 @@ for segment in segments:
         print(f"  '{word.word}' [{word.start:.2f}-{word.end:.2f}s] (conf: {word.probability:.3f})")
 ```
 
-### Transformer Models
+### Using Transformers Backend
 
 ```python
-# Use Hugging Face models with transformers backend
+# Use Shunya Labs model with transformers backend
 transcriber = PingalaTranscriber(
-    model_name="distil-whisper/distil-large-v2",  # 6x faster than large-v2
+    model_name="shunyalabs/pingala-v1-en-verbatim",
     backend="transformers"
 )
 
 segments = transcriber.transcribe_file_simple("audio.wav")
 
-# Or let auto-detection handle it
-transcriber = PingalaTranscriber(model_name="distil-whisper/distil-large-v2")  # Auto-uses transformers
+# Auto-detection will use ct2 by default for Shunya Labs models
+transcriber = PingalaTranscriber()  # Uses ct2 backend (recommended)
 ```
 
 ## Command-Line Interface
@@ -213,8 +210,8 @@ pingala audio.wav --model shunyalabs/pingala-v1-en-verbatim --detect-language --
 # SRT subtitles with word-level timing
 pingala audio.wav --model shunyalabs/pingala-v1-en-verbatim --format srt --word-timestamps -o subtitles.srt
 
-# Transformers backend with custom model
-pingala audio.wav --model distil-whisper/distil-large-v2 --backend transformers --verbose
+# Transformers backend with Shunya Labs model
+pingala audio.wav --model shunyalabs/pingala-v1-en-verbatim --backend transformers --verbose
 
 # Advanced parameters (ct2)
 pingala audio.wav --model shunyalabs/pingala-v1-en-verbatim \
@@ -283,11 +280,11 @@ transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim",
 # Maximum accuracy: Use Shunya Labs model with ct2  
 transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim", backend="ct2")
 
-# Speed-optimized: Use distilled models with transformers
-transcriber = PingalaTranscriber(model_name="distil-whisper/distil-large-v2", backend="transformers")
+# Alternative backend: Use transformers with Shunya Labs model
+transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim", backend="transformers")
 
-# Research/Latest models: Use transformers
-transcriber = PingalaTranscriber(model_name="microsoft/speecht5_asr", backend="transformers")
+# Research/Latest models: Use transformers backend
+transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim", backend="transformers")
 ```
 
 ### Hardware Recommendations
@@ -297,7 +294,7 @@ transcriber = PingalaTranscriber(model_name="microsoft/speecht5_asr", backend="t
 | Real-time | shunyalabs/pingala-v1-en-verbatim | ct2 | GPU 4GB+ |
 | Production | shunyalabs/pingala-v1-en-verbatim | ct2 | GPU 6GB+ |
 | Maximum Quality | shunyalabs/pingala-v1-en-verbatim | ct2 | GPU 8GB+ |
-| Speed-optimized | distil-large-v2 | transformers | GPU 4GB+ |
+| Alternative | shunyalabs/pingala-v1-en-verbatim | transformers | GPU 4GB+ |
 | CPU-only | shunyalabs/pingala-v1-en-verbatim | any | 8GB+ RAM |
 
 ## Examples
@@ -312,9 +309,8 @@ python example.py audio.wav
 python example.py audio.wav --backend ct2
 python example.py audio.wav --backend transformers  
 
-# Test specific models
+# Test Shunya Labs model with different backends
 python example.py audio.wav shunyalabs/pingala-v1-en-verbatim
-python example.py audio.wav distil-whisper/distil-large-v2
 ```
 
 ## Contributing

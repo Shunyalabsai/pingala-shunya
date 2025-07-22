@@ -401,7 +401,7 @@ class PingalaTranscriber:
                 Defaults to "shunyalabs/pingala-v1-en-verbatim".
                 Can be:
                 - Shunya Labs models: "shunyalabs/pingala-v1-en-verbatim"
-                - Hugging Face models: "distil-whisper/distil-large-v2"
+                - Custom Hugging Face models (as needed)
                 - Local model paths: "/path/to/local/model"
             device (str): Device ("cuda", "cpu", "auto")  
             compute_type (str): Precision ("float16", "float32", "int8")

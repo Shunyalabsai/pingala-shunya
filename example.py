@@ -14,12 +14,11 @@ Examples:
     python example.py audio.wav --backend ct2             # Use ct2
     python example.py audio.wav --backend transformers   # Use transformers
     python example.py audio.wav shunyalabs/pingala-v1-en-verbatim  # Specific model
-    python example.py audio.wav distil-whisper/distil-large-v2 # HF model
+    python example.py audio.wav shunyalabs/pingala-v1-en-verbatim # Shunya Labs model
 
-Supported models (examples):
-- Default: shunyalabs/pingala-v1-en-verbatim
-- Shunya Labs: shunyalabs/pingala-v1-en-verbatim
-- Hugging Face: distil-whisper/distil-large-v2, microsoft/speecht5_asr
+Supported models:
+- Default: shunyalabs/pingala-v1-en-verbatim (High-quality English transcription)
+- More Shunya Labs models coming soon!
 - Local: /path/to/local/model
 
 Developed by Shunya Labs for superior transcription quality.
@@ -339,38 +338,34 @@ def streaming_transcription_example(audio_path: str, model_name: str = None, bac
 
 
 def transformers_models_example(audio_path: str):
-    """Demonstrate different transformer models."""
-    print("Hugging Face Transformers Models Example")
+    """Demonstrate Shunya Labs model with transformers backend."""
+    print("Shunya Labs Model with Transformers Backend Example")
     print("=" * 50)
     
-    # Different transformer models to test
-    models = [
-        ("distil-whisper/distil-large-v2", "Distilled large-v2 (6x faster)"),
-        ("distil-whisper/distil-medium.en", "English-only distilled medium"),
-        ("microsoft/speecht5_asr", "Microsoft's speech recognition model"),
-    ]
+    # Test Shunya Labs model with transformers backend
+    model_name = "shunyalabs/pingala-v1-en-verbatim"
+    description = "High-quality English transcription by Shunya Labs"
     
-    for model_name, description in models:
-        print(f"\nTesting {model_name}")
-        print(f"Description: {description}")
+    print(f"\nTesting {model_name}")
+    print(f"Description: {description}")
+    
+    try:
+        transcriber = PingalaTranscriber(
+            model_name=model_name,
+            backend="transformers",  # Force transformers backend
+            device="cuda"
+        )
         
-        try:
-            transcriber = PingalaTranscriber(
-                model_name=model_name,
-                backend="transformers",  # Force transformers backend
-                device="cuda"
-            )
+        segments = transcriber.transcribe_file_simple(audio_path)
+        
+        print(f"SUCCESS: {len(segments)} segments")
+        if segments:
+            print(f"Sample: {segments[0].text[:80]}...")
             
-            segments = transcriber.transcribe_file_simple(audio_path)
-            
-            print(f"SUCCESS: {len(segments)} segments")
-            if segments:
-                print(f"Sample: {segments[0].text[:80]}...")
-                
-        except Exception as e:
-            print(f"FAILED: {e}")
-            if "not installed" in str(e):
-                print("HINT: Install with: pip install 'pingala-shunya[transformers]'")
+    except Exception as e:
+        print(f"FAILED: {e}")
+        if "not installed" in str(e):
+            print("HINT: Install with: pip install 'pingala-shunya[transformers]'")
 
 
 def model_info_example(model_name: str = None, backend: str = None):
@@ -406,7 +401,7 @@ Examples:
   python example.py audio.wav --backend ct2             # Use ct2 
   python example.py audio.wav --backend transformers   # Use transformers
   python example.py audio.wav shunyalabs/pingala-v1-en-verbatim  # With specific model
-  python example.py audio.wav distil-whisper/distil-large-v2  # HF model
+  python example.py audio.wav shunyalabs/pingala-v1-en-verbatim  # Shunya Labs model
 
 Supported backends:
   - ct2: High-performance CTranslate2 optimization (default)
