@@ -223,11 +223,11 @@ If version already exists on PyPI:
 ## 📊 Package Information
 
 - **Name**: pingala-shunya
-- **Version**: 0.3.0
+- **Version**: 1.0.1
 - **Author**: Shunya Labs
 - **Email**: 0@shunyalabs.ai
 - **Website**: https://shunyalabs.ai
-- **Backends**: faster-whisper, transformers, openai-whisper
+- **Backends**: faster-whisper, transformers
 - **Python**: 3.8+
 
 ## 🎯 Success Checklist
