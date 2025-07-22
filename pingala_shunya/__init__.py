@@ -1,16 +1,15 @@
 """
-Pingala Shunya - A comprehensive speech transcription package by Shunya Labs.
+Pingala Shunya - A comprehensive speech transcription package.
 
 This package provides multi-backend speech transcription capabilities using
-ct2 (CTranslate2) and transformers with a unified API and full access to all 
-advanced features including word-level timestamps, confidence scores, Voice 
-Activity Detection (VAD), and language detection.
-
-Developed by Shunya Labs for superior transcription quality.
+faster-whisper, transformers, and openai-whisper with a unified API and
+full access to all advanced features including word-level timestamps,
+confidence scores, Voice Activity Detection (VAD), and language detection.
 
 Supported Backends:
-- ct2: High-performance CTranslate2 optimization (default)
+- faster-whisper: High-performance with GPU acceleration (default)
 - transformers: Hugging Face models and latest research  
+- openai-whisper: Original OpenAI implementation for compatibility
 
 Features:
 - Unified API across all backends
@@ -32,7 +31,7 @@ Example:
     # Or specify backend explicitly
     transcriber = PingalaTranscriber(
         model_name="shunyalabs/pingala-v1-en-verbatim",
-        backend="ct2"
+        backend="faster-whisper"
     )
     
     # Transcribe with advanced features
@@ -43,7 +42,7 @@ Example:
     )
 """
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __author__ = "Shunya Labs"
 __email__ = "0@shunyalabs.ai"
 
@@ -53,8 +52,9 @@ from .transcriber import (
     WordSegment,
     TranscriptionInfo,
     TranscriptionBackend,
-    CT2Backend,
-    TransformersBackend
+    FasterWhisperBackend,
+    TransformersBackend,
+    OpenAIWhisperBackend
 )
 
 __all__ = [
@@ -63,6 +63,7 @@ __all__ = [
     "WordSegment",
     "TranscriptionInfo",
     "TranscriptionBackend",
-    "CT2Backend",
-    "TransformersBackend"
+    "FasterWhisperBackend",
+    "TransformersBackend",
+    "OpenAIWhisperBackend"
 ] 

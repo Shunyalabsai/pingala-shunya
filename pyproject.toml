@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pingala-shunya"
-version = "0.4.0"
+version = "0.4.1"
 authors = [
     {name = "Shunya Labs", email = "0@shunyalabs.ai"},
 ]
@@ -35,9 +35,9 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://shunyalabs.ai"
 "Documentation" = "https://shunyalabs.ai/pingala-shunya"
-"Bug Reports" = "https://github.com/ayush-shunyalabs/pingala-shunya/issues"
-"Source" = "https://github.com/ayush-shunyalabs/pingala-shunya"
-"Changelog" = "https://github.com/ayush-shunyalabs/pingala-shunya/releases"
+"Bug Reports" = "https://github.com/Shunyalabsai/pingala-shunya/issues"
+"Source" = "https://github.com/Shunyalabsai/pingala-shunya"
+"Changelog" = "https://github.com/Shunyalabsai/pingala-shunya/releases"
 
 [project.optional-dependencies]
 # Development dependencies

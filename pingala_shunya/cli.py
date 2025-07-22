@@ -196,7 +196,7 @@ Developed by Shunya Labs for superior transcription quality.
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s 0.4.0"
+        version="%(prog)s 0.4.1"
     )
     
     return parser
