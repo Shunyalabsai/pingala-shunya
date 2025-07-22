@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pingala-shunya
-Version: 0.3.0
+Version: 1.0.1
 Summary: A comprehensive speech transcription package supporting multiple backends (faster-whisper, transformers, openai-whisper)
 Author-email: Shunya Labs <0@shunyalabs.ai>
 Project-URL: Homepage, https://shunyalabs.ai
