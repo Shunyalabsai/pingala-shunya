@@ -8,20 +8,20 @@ Pingala Shunya provides a unified interface for transcribing audio files using s
 
 ## Features
 
-- **🏢 Shunya Labs Optimized**: Built by Shunya Labs for superior performance
-- **⚡ CT2 Backend**: High-performance CTranslate2 optimization (default)
-- **🤗 Transformers Backend**: Hugging Face models and latest research
-- **🎯 Auto-Detection**: Automatically selects the best backend for your model
-- **🔧 Unified API**: Same interface across all backends
-- **📝 Word-Level Timestamps**: Precise timing for individual words
-- **🎖️ Confidence Scores**: Quality metrics for transcription segments and words
-- **🔇 Voice Activity Detection (VAD)**: Filter out silence and background noise
-- **🌍 Language Detection**: Automatic language identification
-- **📊 Multiple Output Formats**: Text, SRT subtitles, and WebVTT
-- **⚡ Streaming Support**: Process segments as they are generated
-- **⚙️ Advanced Parameters**: Full control over all backend features
-- **💻 Rich CLI**: Command-line tool with comprehensive options
-- **🛡️ Error Handling**: Comprehensive error handling and validation
+- **Shunya Labs Optimized**: Built by Shunya Labs for superior performance
+- **CT2 Backend**: High-performance CTranslate2 optimization (default)
+- **Transformers Backend**: Hugging Face models and latest research
+- **Auto-Detection**: Automatically selects the best backend for your model
+- **Unified API**: Same interface across all backends
+- **Word-Level Timestamps**: Precise timing for individual words
+- **Confidence Scores**: Quality metrics for transcription segments and words
+- **Voice Activity Detection (VAD)**: Filter out silence and background noise
+- **Language Detection**: Automatic language identification
+- **Multiple Output Formats**: Text, SRT subtitles, and WebVTT
+- **Streaming Support**: Process segments as they are generated
+- **Advanced Parameters**: Full control over all backend features
+- **Rich CLI**: Command-line tool with comprehensive options
+- **Error Handling**: Comprehensive error handling and validation
 
 ## Installation
 
@@ -51,13 +51,13 @@ pip install "pingala-shunya[complete]"
 
 ## Supported Backends
 
-### ⚡ ct2 (CTranslate2) - Default
+### ct2 (CTranslate2) - Default
 - **Performance**: Fastest inference with CTranslate2 optimization
 - **Features**: Full parameter control, VAD, streaming, GPU acceleration
 - **Models**: All compatible models, optimized for Shunya Labs models
 - **Best for**: Production use, real-time applications
 
-### 🤗 transformers  
+### transformers  
 - **Performance**: Good performance with Hugging Face ecosystem
 - **Features**: Access to latest models, easy fine-tuning integration
 - **Models**: Any Seq2Seq model on Hugging Face Hub
@@ -254,16 +254,16 @@ pingala audio.wav --model shunyalabs/pingala-v1-en-verbatim \
 
 | Feature | ct2 | transformers |
 |---------|-----|--------------|
-| **Performance** | ⭐⭐⭐⭐⭐ Fastest | ⭐⭐⭐ Good |
-| **GPU Acceleration** | ✅ Optimized | ✅ Standard |
-| **Memory Usage** | ⭐⭐⭐⭐⭐ Lowest | ⭐⭐⭐ Moderate |
+| **Performance** | Fastest | Good |
+| **GPU Acceleration** | Optimized | Standard |
+| **Memory Usage** | Lowest | Moderate |
 | **Model Support** | Any model | Any HF model |
-| **Word Timestamps** | ✅ Full support | ❌ Limited |
-| **VAD Filtering** | ✅ Built-in | ❌ No |
-| **Streaming** | ✅ True streaming | ❌ Batch only |
-| **Advanced Params** | ✅ All features | ⭐⭐ Basic |
-| **Latest Models** | ⭐⭐⭐ Updated | ⭐⭐⭐⭐⭐ Latest |
-| **Custom Models** | ✅ CTranslate2 | ✅ Any format |
+| **Word Timestamps** | Full support | Limited |
+| **VAD Filtering** | Built-in | No |
+| **Streaming** | True streaming | Batch only |
+| **Advanced Params** | All features | Basic |
+| **Latest Models** | Updated | Latest |
+| **Custom Models** | CTranslate2 | Any format |
 
 ### Recommendations
 

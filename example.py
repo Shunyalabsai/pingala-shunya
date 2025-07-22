@@ -34,7 +34,7 @@ from pingala_shunya import PingalaTranscriber
 
 def backend_comparison_example(audio_path: str):
     """Compare both backends with the same model."""
-    print("🔄 Backend Comparison Example")
+    print("Backend Comparison Example")
     print("=" * 50)
     
     # Test model that works across backends
@@ -44,7 +44,7 @@ def backend_comparison_example(audio_path: str):
     results = {}
     
     for backend_name in backends:
-        print(f"\n📊 Testing {backend_name} backend...")
+        print(f"\nTesting {backend_name} backend...")
         try:
             transcriber = PingalaTranscriber(
                 model_name=test_model,
@@ -69,21 +69,21 @@ def backend_comparison_example(audio_path: str):
                 print(f"  First segment: {segments[0].text[:100]}...")
                 
         except Exception as e:
-            print(f"  ❌ Failed: {e}")
+            print(f"  FAILED: {e}")
             results[backend_name] = {'error': str(e)}
     
     # Summary
-    print(f"\n📋 Backend Comparison Summary:")
+    print(f"\nBackend Comparison Summary:")
     for backend, result in results.items():
         if 'error' in result:
-            print(f"  {backend}: ❌ {result['error']}")
+            print(f"  {backend}: FAILED {result['error']}")
         else:
-            print(f"  {backend}: ✅ {result['segments']} segments")
+            print(f"  {backend}: SUCCESS {result['segments']} segments")
 
 
 def basic_transcription_example(audio_path: str, model_name: str = None, backend: str = None):
     """Basic transcription with auto-detection or specified backend."""
-    print("🎯 Basic Transcription Example")
+    print("Basic Transcription Example")
     print("=" * 50)
     
     print(f"Audio file: {audio_path}")
@@ -100,30 +100,30 @@ def basic_transcription_example(audio_path: str, model_name: str = None, backend
         
         # Get model info
         model_info = transcriber.get_model_info()
-        print(f"\n🔧 Model Info:")
+        print(f"\nModel Info:")
         print(f"  Backend: {model_info['backend']}")
         print(f"  Model: {model_info['model_name']}")
         print(f"  Device: {model_info['device']}")
         
         # Simple transcription
-        print(f"\n🚀 Transcribing...")
+        print(f"\nTranscribing...")
         segments = transcriber.transcribe_file_simple(audio_path, beam_size=5)
         
-        print(f"\n📝 Transcription Results ({len(segments)} segments):")
+        print(f"\nTranscription Results ({len(segments)} segments):")
         for segment in segments:
             print(f"[{segment.start:6.2f}s -> {segment.end:6.2f}s] {segment.text}")
             
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
         if "not installed" in str(e):
-            print("💡 Hint: Install the required backend dependencies:")
+            print("HINT: Install the required backend dependencies:")
             print("   pip install 'pingala-shunya[transformers]'  # for transformers")
             print("   pip install 'pingala-shunya'  # for ct2 (default)")
 
 
 def advanced_transcription_example(audio_path: str, model_name: str = None, backend: str = None):
     """Advanced transcription with full metadata and features."""
-    print("⚙️ Advanced Transcription Example")
+    print("Advanced Transcription Example")
     print("=" * 50)
     
     try:
@@ -138,7 +138,7 @@ def advanced_transcription_example(audio_path: str, model_name: str = None, back
         print(f"Backend: {model_info['backend']}, Model: {model_info['model_name']}")
         
         # Advanced transcription with all parameters
-        print(f"\n🔥 Advanced transcription with full parameters...")
+        print(f"\nAdvanced transcription with full parameters...")
         segments, info = transcriber.transcribe_file(
             audio_path,
             beam_size=10,
@@ -152,37 +152,39 @@ def advanced_transcription_example(audio_path: str, model_name: str = None, back
         )
         
         # Display info
-        print(f"\n📊 Transcription Info:")
+        print(f"\nTranscription Info:")
         print(f"  Language: {info.language} (confidence: {info.language_probability:.3f})")
         print(f"  Duration: {info.duration:.2f} seconds")
         print(f"  Duration after VAD: {info.duration_after_vad:.2f} seconds")
         
         # Display segments with metadata
-        print(f"\n📝 Detailed Segments ({len(segments)} total):")
+        print(f"\nDetailed Segments ({len(segments)} total):")
         for i, segment in enumerate(segments[:3], 1):  # Show first 3
-            confidence_str = f" (conf: {segment.confidence:.3f})" if segment.confidence else ""
-            print(f"{i}. [{segment.start:6.2f}s -> {segment.end:6.2f}s]{confidence_str}")
-            print(f"   Text: {segment.text}")
+            print(f"\nSegment {i}:")
+            print(f"  Time: [{segment.start:.2f}s -> {segment.end:.2f}s]")
+            print(f"  Text: {segment.text}")
+            if segment.confidence:
+                print(f"  Confidence: {segment.confidence:.3f}")
             if segment.avg_logprob:
-                print(f"   Avg log prob: {segment.avg_logprob:.3f}")
+                print(f"  Avg Log Prob: {segment.avg_logprob:.3f}")
             if segment.no_speech_prob:
-                print(f"   No speech prob: {segment.no_speech_prob:.3f}")
-        
+                print(f"  No Speech Prob: {segment.no_speech_prob:.3f}")
+                
         if len(segments) > 3:
-            print(f"   ... and {len(segments) - 3} more segments")
+            print(f"\n... and {len(segments) - 3} more segments")
             
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 def word_level_timestamps_example(audio_path: str, model_name: str = None, backend: str = None):
     """Demonstrate word-level timestamps (ct2 only)."""
-    print("📝 Word-Level Timestamps Example")
+    print("Word-Level Timestamps Example")
     print("=" * 50)
     
     # Choose backend that supports word timestamps
     if backend == "transformers":
-        print("⚠️  Word-level timestamps have limited support in transformers backend.")
+        print("WARNING: Word-level timestamps have limited support in transformers backend.")
         print("    Using ct2 for this example.")
         backend = "ct2"
     
@@ -196,14 +198,14 @@ def word_level_timestamps_example(audio_path: str, model_name: str = None, backe
         model_info = transcriber.get_model_info()
         print(f"Backend: {model_info['backend']}, Model: {model_info['model_name']}")
         
-        print(f"\n🔍 Transcribing with word-level timestamps...")
+        print(f"\nTranscribing with word-level timestamps...")
         segments, info = transcriber.transcribe_with_word_timestamps(
             audio_path,
             beam_size=5,
             language="en"
         )
         
-        print(f"\n📝 Word-Level Results ({len(segments)} segments):")
+        print(f"\nWord-Level Results ({len(segments)} segments):")
         for i, segment in enumerate(segments[:2], 1):  # Show first 2 segments
             print(f"\nSegment {i}: [{segment.start:.2f}s -> {segment.end:.2f}s]")
             print(f"Text: {segment.text}")
@@ -219,12 +221,12 @@ def word_level_timestamps_example(audio_path: str, model_name: str = None, backe
             print(f"\n... and {len(segments) - 2} more segments")
             
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 def vad_filtering_example(audio_path: str, model_name: str = None):
     """Demonstrate Voice Activity Detection (ct2 only)."""
-    print("🔇 Voice Activity Detection (VAD) Example")
+    print("Voice Activity Detection (VAD) Example")
     print("=" * 50)
     
     try:
@@ -245,7 +247,7 @@ def vad_filtering_example(audio_path: str, model_name: str = None):
             "speech_pad_ms": 400
         }
         
-        print(f"\n🔇 Transcribing with VAD filtering...")
+        print(f"\nTranscribing with VAD filtering...")
         print(f"VAD params: {vad_params}")
         
         segments, info = transcriber.transcribe_with_vad(
@@ -254,29 +256,29 @@ def vad_filtering_example(audio_path: str, model_name: str = None):
             beam_size=5
         )
         
-        print(f"\n📊 VAD Results:")
+        print(f"\nVAD Results:")
         print(f"  Original duration: {info.duration:.2f}s")
         print(f"  After VAD filtering: {info.duration_after_vad:.2f}s")
         print(f"  Time saved: {info.duration - info.duration_after_vad:.2f}s")
         print(f"  Segments found: {len(segments)}")
         
-        print(f"\n📝 VAD-Filtered Segments:")
+        print(f"\nVAD-Filtered Segments:")
         for segment in segments[:3]:  # Show first 3
             print(f"[{segment.start:6.2f}s -> {segment.end:6.2f}s] {segment.text}")
             
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 def language_detection_example(audio_path: str, backend: str = None):
     """Demonstrate language detection across backends."""
-    print("🌍 Language Detection Example")
+    print("Language Detection Example")
     print("=" * 50)
     
     backends_to_test = [backend] if backend else ["ct2", "transformers"]
     
     for backend_name in backends_to_test:
-        print(f"\n🔍 Testing language detection with {backend_name}...")
+        print(f"\nTesting language detection with {backend_name}...")
         try:
             transcriber = PingalaTranscriber(
                 model_name="shunyalabs/pingala-v1-en-verbatim",  # Use Shunya Labs model for detection
@@ -292,12 +294,12 @@ def language_detection_example(audio_path: str, backend: str = None):
             print(f"  Audio duration: {info.duration:.2f}s")
             
         except Exception as e:
-            print(f"  ❌ Failed with {backend_name}: {e}")
+            print(f"  FAILED with {backend_name}: {e}")
 
 
 def streaming_transcription_example(audio_path: str, model_name: str = None, backend: str = None):
     """Demonstrate streaming transcription."""
-    print("⚡ Streaming Transcription Example")
+    print("Streaming Transcription Example")
     print("=" * 50)
     
     try:
@@ -311,11 +313,11 @@ def streaming_transcription_example(audio_path: str, model_name: str = None, bac
         print(f"Backend: {model_info['backend']}")
         
         if model_info['backend'] == "ct2":
-            print("🚀 True streaming transcription (ct2)")
+            print("True streaming transcription (ct2)")
         else:
-            print("📦 Batch processing with generator interface")
+            print("Batch processing with generator interface")
         
-        print(f"\n⚡ Processing segments as they arrive...")
+        print(f"\nProcessing segments as they arrive...")
         segment_count = 0
         
         for segment in transcriber.transcribe_file_generator(
@@ -333,12 +335,12 @@ def streaming_transcription_example(audio_path: str, model_name: str = None, bac
         print(f"... (streaming continues for full audio)")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 def transformers_models_example(audio_path: str):
     """Demonstrate different transformer models."""
-    print("🤗 Hugging Face Transformers Models Example")
+    print("Hugging Face Transformers Models Example")
     print("=" * 50)
     
     # Different transformer models to test
@@ -349,7 +351,7 @@ def transformers_models_example(audio_path: str):
     ]
     
     for model_name, description in models:
-        print(f"\n🔍 Testing {model_name}")
+        print(f"\nTesting {model_name}")
         print(f"Description: {description}")
         
         try:
@@ -361,19 +363,19 @@ def transformers_models_example(audio_path: str):
             
             segments = transcriber.transcribe_file_simple(audio_path)
             
-            print(f"✅ Success: {len(segments)} segments")
+            print(f"SUCCESS: {len(segments)} segments")
             if segments:
                 print(f"Sample: {segments[0].text[:80]}...")
                 
         except Exception as e:
-            print(f"❌ Failed: {e}")
+            print(f"FAILED: {e}")
             if "not installed" in str(e):
-                print("💡 Install with: pip install 'pingala-shunya[transformers]'")
+                print("HINT: Install with: pip install 'pingala-shunya[transformers]'")
 
 
 def model_info_example(model_name: str = None, backend: str = None):
     """Display detailed model information."""
-    print("🔧 Model Information Example")
+    print("Model Information Example")
     print("=" * 50)
     
     try:
@@ -385,12 +387,12 @@ def model_info_example(model_name: str = None, backend: str = None):
         
         model_info = transcriber.get_model_info()
         
-        print(f"📊 Model Details:")
+        print(f"Model Details:")
         for key, value in model_info.items():
             print(f"  {key}: {value}")
             
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"ERROR: {e}")
 
 
 def main():
@@ -446,12 +448,12 @@ Developed by Shunya Labs for superior transcription quality.
     # Check if audio file exists
     audio_path = Path(args.audio_file)
     if not audio_path.exists():
-        print(f"❌ Error: Audio file '{args.audio_file}' not found.")
+        print(f"ERROR: Audio file '{args.audio_file}' not found.")
         sys.exit(1)
     
     audio_path = str(audio_path)
     
-    print("🎵 Pingala Shunya Multi-Backend Examples by Shunya Labs")
+    print("Pingala Shunya Multi-Backend Examples by Shunya Labs")
     print("=" * 60)
     print(f"Audio file: {audio_path}")
     print(f"Model: {args.model_name or 'default'}")
@@ -497,8 +499,8 @@ Developed by Shunya Labs for superior transcription quality.
             transformers_models_example(audio_path)
             print()
         
-        print("✅ Examples completed successfully!")
-        print("\n💡 Tips:")
+        print("Examples completed successfully!")
+        print("\nTips:")
         print("  - Use ct2 for production and real-time applications")
         print("  - Use transformers for latest research models and fine-tuning")
         print("  - The default shunyalabs/pingala-v1-en-verbatim model is optimized for quality")
@@ -506,9 +508,9 @@ Developed by Shunya Labs for superior transcription quality.
         print("  - Developed by Shunya Labs for superior transcription quality")
         
     except KeyboardInterrupt:
-        print("\n⚠️  Interrupted by user")
+        print("\nInterrupted by user")
     except Exception as e:
-        print(f"\n❌ Unexpected error: {e}")
+        print(f"\nUnexpected error: {e}")
         sys.exit(1)
 
 

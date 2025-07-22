@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pingala-shunya"
-version = "0.4.1"
+version = "1.0.0"
 authors = [
     {name = "Shunya Labs", email = "0@shunyalabs.ai"},
 ]
