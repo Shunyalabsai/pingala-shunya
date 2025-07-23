@@ -31,7 +31,7 @@ Example:
     # Or specify backend explicitly
     transcriber = PingalaTranscriber(
         model_name="shunyalabs/pingala-v1-en-verbatim",
-        backend="faster-whisper"
+        backend="ct2"
     )
     
     # Transcribe with advanced features
@@ -42,7 +42,7 @@ Example:
     )
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Shunya Labs"
 __email__ = "0@shunyalabs.ai"
 
@@ -52,9 +52,8 @@ from .transcriber import (
     WordSegment,
     TranscriptionInfo,
     TranscriptionBackend,
-    FasterWhisperBackend,
-    TransformersBackend,
-    OpenAIWhisperBackend
+    CT2Backend,
+    TransformersBackend
 )
 
 __all__ = [
@@ -63,7 +62,6 @@ __all__ = [
     "WordSegment",
     "TranscriptionInfo",
     "TranscriptionBackend",
-    "FasterWhisperBackend",
-    "TransformersBackend",
-    "OpenAIWhisperBackend"
+    "CT2Backend",
+    "TransformersBackend"
 ] 
