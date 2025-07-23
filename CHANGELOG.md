@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.3] - 2025-07-23
+
+### Fixed
+- **Word Timestamps Error**: Fixed `RuntimeError: The model configuration does not contain the field 'alignment_heads'` 
+  - Added graceful fallback when word-level timestamps are not supported by the model
+  - Automatically retries transcription without word timestamps when alignment heads are missing
+  - Clear warning messages explaining the limitation and suggesting compatible models
+  - Preserves all other functionality while disabling only the problematic word timestamps
+
+### Improved
+- Enhanced error handling for models that don't support word-level timing
+- Better user guidance on model compatibility for advanced features
+
 ## [0.1.2] - 2025-07-23
 
 ### Fixed

@@ -181,31 +181,70 @@ class CT2Backend(TranscriptionBackend):
             else:
                 # Re-raise if language was explicitly specified
                 raise RuntimeError(f"Transcription failed for audio file '{audio_path}' with specified language '{language}': {e}")
+        except RuntimeError as e:
+            # Handle alignment heads error for word timestamps
+            if "alignment_heads" in str(e) and word_timestamps:
+                warnings.warn(
+                    f"Word-level timestamps not supported by this model ('{self.model_name}'). "
+                    "The model lacks 'alignment_heads' configuration. "
+                    "Falling back to transcription without word timestamps. "
+                    "To get word timestamps, use a model that supports them (e.g., 'openai/whisper-tiny').",
+                    UserWarning
+                )
+                # Retry without word timestamps
+                segments, info = self.model.transcribe(
+                    audio_path,
+                    beam_size=beam_size,
+                    word_timestamps=False,  # Disable word timestamps
+                    language=language,
+                    **kwargs
+                )
+            else:
+                raise RuntimeError(f"Transcription failed for audio file '{audio_path}': {e}")
         except Exception as e:
             raise RuntimeError(f"Transcription failed for audio file '{audio_path}': {e}")
         
         result = []
-        for segment in segments:
-            words = []
-            if word_timestamps and hasattr(segment, 'words') and segment.words:
-                for word in segment.words:
-                    words.append(WordSegment(
-                        word=word.word,
-                        start=word.start,
-                        end=word.end,
-                        probability=word.probability
-                    ))
-            
-            result.append(TranscriptionSegment(
-                start=segment.start,
-                end=segment.end,
-                text=segment.text,
-                words=words,
-                avg_logprob=getattr(segment, 'avg_logprob', None),
-                no_speech_prob=getattr(segment, 'no_speech_prob', None),
-                compression_ratio=getattr(segment, 'compression_ratio', None),
-                temperature=getattr(segment, 'temperature', None)
-            ))
+        try:
+            for segment in segments:
+                words = []
+                if word_timestamps and hasattr(segment, 'words') and segment.words:
+                    for word in segment.words:
+                        words.append(WordSegment(
+                            word=word.word,
+                            start=word.start,
+                            end=word.end,
+                            probability=word.probability
+                        ))
+                
+                result.append(TranscriptionSegment(
+                    start=segment.start,
+                    end=segment.end,
+                    text=segment.text,
+                    words=words,
+                    avg_logprob=getattr(segment, 'avg_logprob', None),
+                    no_speech_prob=getattr(segment, 'no_speech_prob', None),
+                    compression_ratio=getattr(segment, 'compression_ratio', None),
+                    temperature=getattr(segment, 'temperature', None)
+                ))
+        except RuntimeError as e:
+            # Handle alignment heads error during segment processing
+            if "alignment_heads" in str(e) and word_timestamps:
+                warnings.warn(
+                    f"Word-level timestamps failed during processing for model '{self.model_name}'. "
+                    "Retrying without word timestamps.",
+                    UserWarning
+                )
+                # Retry the entire transcription without word timestamps
+                return self.transcribe(
+                    audio_path,
+                    beam_size=beam_size,
+                    word_timestamps=False,  # Disable word timestamps
+                    language=language,
+                    **kwargs
+                )
+            else:
+                raise
         
         transcription_info = TranscriptionInfo(
             language=info.language,

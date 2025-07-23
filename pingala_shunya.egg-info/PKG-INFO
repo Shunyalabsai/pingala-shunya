@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pingala-shunya
-Version: 0.1.1
+Version: 0.1.2
 Summary: Speech transcription package by Shunya Labs with ct2 and transformers backends
 Author-email: Shunya Labs <0@shunyalabs.ai>
 Project-URL: Homepage, https://shunyalabs.ai
