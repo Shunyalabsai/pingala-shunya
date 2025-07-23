@@ -147,13 +147,42 @@ class CT2Backend(TranscriptionBackend):
         if self.model is None:
             raise RuntimeError("Model not loaded")
         
-        segments, info = self.model.transcribe(
-            audio_path,
-            beam_size=beam_size,
-            word_timestamps=word_timestamps,
-            language=language,
-            **kwargs
-        )
+        try:
+            segments, info = self.model.transcribe(
+                audio_path,
+                beam_size=beam_size,
+                word_timestamps=word_timestamps,
+                language=language,
+                **kwargs
+            )
+        except IndexError as e:
+            # Handle language detection failure - fallback to English
+            if language is None:
+                warnings.warn(
+                    f"Language detection failed for audio file '{audio_path}'. "
+                    "This can happen with very short audio, silent audio, or corrupted files. "
+                    "Falling back to English. You can specify language explicitly (e.g., language='en') to avoid this warning.",
+                    UserWarning
+                )
+                try:
+                    segments, info = self.model.transcribe(
+                        audio_path,
+                        beam_size=beam_size,
+                        word_timestamps=word_timestamps,
+                        language="en",  # Fallback to English
+                        **kwargs
+                    )
+                except Exception as fallback_error:
+                    raise RuntimeError(
+                        f"Transcription failed for audio file '{audio_path}'. "
+                        f"Language detection failed and fallback to English also failed: {fallback_error}. "
+                        "Please check if the audio file is valid and not corrupted."
+                    )
+            else:
+                # Re-raise if language was explicitly specified
+                raise RuntimeError(f"Transcription failed for audio file '{audio_path}' with specified language '{language}': {e}")
+        except Exception as e:
+            raise RuntimeError(f"Transcription failed for audio file '{audio_path}': {e}")
         
         result = []
         for segment in segments:

@@ -1,13 +1,13 @@
 Metadata-Version: 2.4
 Name: pingala-shunya
-Version: 1.0.1
-Summary: A comprehensive speech transcription package supporting multiple backends (faster-whisper, transformers, openai-whisper)
+Version: 0.1.1
+Summary: Speech transcription package by Shunya Labs with ct2 and transformers backends
 Author-email: Shunya Labs <0@shunyalabs.ai>
 Project-URL: Homepage, https://shunyalabs.ai
 Project-URL: Documentation, https://shunyalabs.ai/pingala-shunya
 Project-URL: Bug Reports, https://github.com/shunyalabs/pingala-shunya/issues
 Project-URL: Source, https://github.com/shunyalabs/pingala-shunya
-Keywords: speech-to-text,transcription,whisper,audio,ai,openai,faster-whisper,transformers
+Keywords: speech-to-text,transcription,audio,ai,shunyalabs,ct2,transformers,enterprise
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
@@ -36,18 +36,14 @@ Provides-Extra: transformers
 Requires-Dist: transformers>=4.25.0; extra == "transformers"
 Requires-Dist: librosa>=0.10.0; extra == "transformers"
 Requires-Dist: datasets>=2.0.0; extra == "transformers"
-Provides-Extra: openai-whisper
-Requires-Dist: openai-whisper>=20231117; extra == "openai-whisper"
 Provides-Extra: all
 Requires-Dist: transformers>=4.25.0; extra == "all"
 Requires-Dist: librosa>=0.10.0; extra == "all"
 Requires-Dist: datasets>=2.0.0; extra == "all"
-Requires-Dist: openai-whisper>=20231117; extra == "all"
 Provides-Extra: complete
 Requires-Dist: transformers>=4.25.0; extra == "complete"
 Requires-Dist: librosa>=0.10.0; extra == "complete"
 Requires-Dist: datasets>=2.0.0; extra == "complete"
-Requires-Dist: openai-whisper>=20231117; extra == "complete"
 Requires-Dist: pytest>=6.0; extra == "complete"
 Requires-Dist: pytest-cov>=2.0; extra == "complete"
 Requires-Dist: black>=21.0; extra == "complete"
