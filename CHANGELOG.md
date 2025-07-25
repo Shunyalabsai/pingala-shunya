@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.4] - 2025-07-25
+
+### Improved
+- **Enhanced Transformers Backend**: Updated TransformersBackend to use WhisperForConditionalGeneration and WhisperProcessor
+  - Changed from AutoModelForSpeechSeq2Seq to WhisperForConditionalGeneration for better Whisper model compatibility
+  - Improved pipeline configuration with explicit tokenizer and feature_extractor setup
+  - Better device handling with torch.device() objects
+  - Simplified model loading process for more reliable initialization
+  - Direct audio file processing through pipeline for improved performance
+
+### Technical Details
+- Replaced AutoModelForSpeechSeq2Seq/AutoProcessor with Whisper-specific classes
+- Enhanced device management and model placement
+- Streamlined pipeline configuration matching tested patterns
+
 ## [0.1.3] - 2025-07-23
 
 ### Fixed

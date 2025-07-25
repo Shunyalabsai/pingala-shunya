@@ -293,24 +293,19 @@ class TransformersBackend(TranscriptionBackend):
     def load_model(self, model_name: str, device: str, compute_type: str, **kwargs):
         """Load transformers model."""
         try:
-            from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
+            from transformers import WhisperForConditionalGeneration, WhisperProcessor
             import torch
             
             self.model_name = model_name
             self.device = device
             
-            # Load model and processor
-            self.model = AutoModelForSpeechSeq2Seq.from_pretrained(
-                model_name,
-                torch_dtype=torch.float16 if compute_type == "float16" else torch.float32,
-                low_cpu_mem_usage=True,
-                use_safetensors=True
-            )
-            self.processor = AutoProcessor.from_pretrained(model_name)
+            # Load model and processor using Whisper-specific classes
+            self.model = WhisperForConditionalGeneration.from_pretrained(model_name)
+            self.processor = WhisperProcessor.from_pretrained(model_name)
             
-            # Move to device
-            if device == "cuda" and torch.cuda.is_available():
-                self.model.to("cuda")
+            # Move model to device
+            device_obj = torch.device(device if device == "cuda" and torch.cuda.is_available() else "cpu")
+            self.model = self.model.to(device_obj)
             
         except ImportError:
             raise RuntimeError("transformers backend not available. Install with: pip install transformers torch librosa")
@@ -334,26 +329,22 @@ class TransformersBackend(TranscriptionBackend):
             import librosa
             from transformers import pipeline
             
-            # Create pipeline
+            # Create pipeline with explicit tokenizer and feature_extractor
             pipe = pipeline(
                 "automatic-speech-recognition",
                 model=self.model,
                 tokenizer=self.processor.tokenizer,
                 feature_extractor=self.processor.feature_extractor,
-                max_new_tokens=128,
-                chunk_length_s=30,
-                batch_size=16,
-                return_timestamps=True,
                 torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-                device=self.device if self.device == "cuda" else "cpu"
+                device=torch.device(self.device if self.device == "cuda" and torch.cuda.is_available() else "cpu"),
             )
             
-            # Load audio
+            # Process the audio file directly with the pipeline
+            result = pipe(audio_path)
+            
+            # Load audio to get duration info
             audio, sr = librosa.load(audio_path, sr=16000)
             duration = len(audio) / sr
-            
-            # Transcribe
-            result = pipe(audio, generate_kwargs={"num_beams": beam_size})
             
             # Process results
             segments = []
