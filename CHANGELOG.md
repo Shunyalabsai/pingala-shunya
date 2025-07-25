@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.5] - 2025-07-25
+
+### Fixed
+- **Audio Format Compatibility**: Fixed ValueError in TransformersBackend for various audio formats
+  - Added robust audio preprocessing with librosa before pipeline processing
+  - Now supports OPUS, OGG, M4A and other formats that transformers pipeline couldn't handle directly
+  - Better error messages for unsupported or corrupted audio files
+  - Added audio validation to prevent empty file processing
+
+### Technical Details
+- Audio files are now preprocessed with librosa.load() before being passed to the transformers pipeline
+- Enhanced error handling with specific guidance on supported formats
+- Prevents pipeline failures from ffmpeg_read issues
+
 ## [0.1.4] - 2025-07-25
 
 ### Improved

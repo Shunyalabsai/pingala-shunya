@@ -328,6 +328,23 @@ class TransformersBackend(TranscriptionBackend):
             import torch
             import librosa
             from transformers import pipeline
+            import numpy as np
+            
+            # Load and preprocess audio with librosa first to handle various formats
+            try:
+                audio, sr = librosa.load(audio_path, sr=16000)
+                duration = len(audio) / sr
+                
+                # Ensure audio is not empty
+                if len(audio) == 0:
+                    raise ValueError("Audio file appears to be empty or corrupted")
+                
+            except Exception as audio_error:
+                raise RuntimeError(
+                    f"Failed to load audio file '{audio_path}'. "
+                    f"Supported formats: wav, mp3, flac, ogg, opus, m4a. "
+                    f"Error: {audio_error}"
+                )
             
             # Create pipeline with explicit tokenizer and feature_extractor
             pipe = pipeline(
@@ -339,12 +356,8 @@ class TransformersBackend(TranscriptionBackend):
                 device=torch.device(self.device if self.device == "cuda" and torch.cuda.is_available() else "cpu"),
             )
             
-            # Process the audio file directly with the pipeline
-            result = pipe(audio_path)
-            
-            # Load audio to get duration info
-            audio, sr = librosa.load(audio_path, sr=16000)
-            duration = len(audio) / sr
+            # Process the preprocessed audio array instead of file path
+            result = pipe(audio)
             
             # Process results
             segments = []
