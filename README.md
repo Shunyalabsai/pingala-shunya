@@ -25,29 +25,102 @@ Pingala Shunya provides a unified interface for transcribing audio files using s
 
 ## Installation
 
-### Basic Installation (ct2 backend)
+### Standard Installation (All Backends Included)
 ```bash
 pip install pingala-shunya
 ```
 
-### Backend-Specific Installations
+This installs all dependencies including:
+- **faster-whisper** ≥ 0.10.0 (CT2 backend)
+- **transformers** == 4.52.4 (Transformers backend)
+- **ctranslate2** == 4.4.0 (GPU acceleration)
+- **librosa** ≥ 0.10.0 (Audio processing)
+- **torch** ≥ 1.9.0 & **torchaudio** ≥ 0.9.0 (PyTorch)
+- **datasets** ≥ 2.0.0 & **numpy** ≥ 1.21.0
+
+### Development Installation
 
 ```bash
-# For Hugging Face transformers support
-pip install "pingala-shunya[transformers]"
-
-# For all backends
-pip install "pingala-shunya[all]"
-
 # Complete installation with development tools
 pip install "pingala-shunya[complete]"
 ```
+
+This adds development tools: `pytest`, `black`, `flake8`, `mypy`
 
 ### Requirements
 
 - Python 3.8 or higher
 - CUDA-compatible GPU (recommended for optimal performance)
 - PyTorch and torchaudio
+
+Unlike other transcription tools, FFmpeg does **not** need to be installed on the system. The audio is decoded with the Python library [PyAV](https://github.com/PyAV-Org/PyAV) which bundles the FFmpeg libraries in its package.
+
+### GPU Support and CUDA Installation
+
+#### GPU Requirements
+
+GPU execution requires the following NVIDIA libraries to be installed:
+
+* [cuBLAS for CUDA 12](https://developer.nvidia.com/cublas)
+* [cuDNN 9 for CUDA 12](https://developer.nvidia.com/cudnn)
+
+**Important**: The latest versions of `ctranslate2` only support CUDA 12 and cuDNN 9. For CUDA 11 and cuDNN 8, downgrade to the `3.24.0` version of `ctranslate2`. For CUDA 12 and cuDNN 8, use `ctranslate2==4.4.0` (already included in pingala-shunya):
+
+```bash
+pip install --force-reinstall ctranslate2==4.4.0
+```
+
+#### CUDA Installation Methods
+
+<details>
+<summary>Method 1: Docker (Recommended)</summary>
+
+The easiest way is to use the official NVIDIA CUDA Docker image:
+```bash
+docker run --gpus all -it nvidia/cuda:12.3.2-cudnn9-runtime-ubuntu22.04
+pip install pingala-shunya
+```
+</details>
+
+<details>
+<summary>Method 2: pip Installation (Linux only)</summary>
+
+Install CUDA libraries via pip:
+```bash
+pip install nvidia-cublas-cu12 nvidia-cudnn-cu12==9.*
+
+export LD_LIBRARY_PATH=`python3 -c 'import os; import nvidia.cublas.lib; import nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + ":" + os.path.dirname(nvidia.cudnn.lib.__file__))'`
+```
+</details>
+
+<details>
+<summary>Method 3: Manual Download (Windows & Linux)</summary>
+
+Download pre-built CUDA libraries from [Purfview's repository](https://github.com/Purfview/whisper-standalone-win/releases/tag/libs). Extract and add to your system PATH.
+</details>
+
+### Performance Benchmarks
+
+Based on faster-whisper benchmarks transcribing 13 minutes of audio:
+
+#### GPU Performance (NVIDIA RTX 3070 Ti 8GB)
+
+| Backend | Precision | Beam size | Time | VRAM Usage |
+| --- | --- | --- | --- | --- |
+| transformers (SDPA) | fp16 | 5 | 1m52s | 4960MB |
+| **faster-whisper (CT2)** | fp16 | 5 | **1m03s** | 4525MB |
+| **faster-whisper (CT2)** (`batch_size=8`) | fp16 | 5 | **17s** | 6090MB |
+| **faster-whisper (CT2)** | int8 | 5 | 59s | 2926MB |
+
+#### CPU Performance (Intel Core i7-12700K, 8 threads)
+
+| Backend | Precision | Beam size | Time | RAM Usage |
+| --- | --- | --- | --- | --- |
+| **faster-whisper (CT2)** | fp32 | 5 | 2m37s | 2257MB |
+| **faster-whisper (CT2)** (`batch_size=8`) | fp32 | 5 | **1m06s** | 4230MB |
+| **faster-whisper (CT2)** | int8 | 5 | 1m42s | 1477MB |
+
+*Pingala Shunya delivers superior performance with optimized CTranslate2 backend and efficient memory usage.*
 
 ## Supported Backends
 
@@ -296,6 +369,123 @@ transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim",
 | Maximum Quality | shunyalabs/pingala-v1-en-verbatim | ct2 | GPU 8GB+ |
 | Alternative | shunyalabs/pingala-v1-en-verbatim | transformers | GPU 4GB+ |
 | CPU-only | shunyalabs/pingala-v1-en-verbatim | any | 8GB+ RAM |
+
+### GPU Optimization
+
+```python
+# Maximum performance on GPU - FP16 precision
+transcriber = PingalaTranscriber(
+    model_name="shunyalabs/pingala-v1-en-verbatim",
+    device="cuda",
+    compute_type="float16"  # Fastest GPU performance
+)
+
+# Memory constrained GPU - INT8 quantization
+transcriber = PingalaTranscriber(
+    model_name="shunyalabs/pingala-v1-en-verbatim", 
+    device="cuda",
+    compute_type="int8_float16"  # Lower memory usage
+)
+
+# Batched processing for multiple files
+segments, info = transcriber.transcribe_file(
+    "audio.wav",
+    batch_size=8,  # Process multiple segments in parallel
+    beam_size=5
+)
+```
+
+### CPU Optimization
+
+```python
+# Optimized CPU settings
+transcriber = PingalaTranscriber(
+    model_name="shunyalabs/pingala-v1-en-verbatim",
+    device="cpu",
+    compute_type="int8"  # Lower memory, faster on CPU
+)
+
+# Control CPU threads for best performance
+import os
+os.environ["OMP_NUM_THREADS"] = "4"  # Adjust based on your CPU
+```
+
+### Memory Optimization Tips
+
+- **GPU VRAM**: Use `int8_float16` compute type to reduce memory usage by ~40%
+- **System RAM**: Use `int8` compute type on CPU to reduce memory usage
+- **Batch Size**: Increase batch size if you have sufficient memory for faster processing
+- **Model Size**: Consider smaller models for memory-constrained environments
+
+### Performance Comparison Tips
+
+When comparing against other implementations:
+- Use same beam size (default is 5 in pingala-shunya)
+- Compare with similar Word Error Rate (WER)
+- Set consistent thread count: `OMP_NUM_THREADS=4 python script.py`
+- Ensure similar transcription quality metrics
+
+## Troubleshooting
+
+### Common CUDA Issues
+
+**Issue**: `RuntimeError: No CUDA capable device found`
+```bash
+# Check CUDA availability
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+
+# If False, install CUDA toolkit or use CPU
+transcriber = PingalaTranscriber(device="cpu")
+```
+
+**Issue**: `CUDA out of memory`
+```python
+# Solution 1: Use INT8 quantization
+transcriber = PingalaTranscriber(compute_type="int8_float16")
+
+# Solution 2: Reduce batch size
+segments, info = transcriber.transcribe_file("audio.wav", batch_size=1)
+
+# Solution 3: Use CPU
+transcriber = PingalaTranscriber(device="cpu")
+```
+
+**Issue**: `cuDNN/cuBLAS library not found`
+```bash
+# Install CUDA libraries via pip (Linux)
+pip install nvidia-cublas-cu12 nvidia-cudnn-cu12==9.*
+
+# Or use Docker
+docker run --gpus all -it nvidia/cuda:12.3.2-cudnn9-runtime-ubuntu22.04
+```
+
+**Issue**: `ctranslate2` version compatibility
+```bash
+# For CUDA 12 + cuDNN 8 (default in pingala-shunya)
+pip install ctranslate2==4.4.0
+
+# For CUDA 11 + cuDNN 8
+pip install ctranslate2==3.24.0
+```
+
+### Model Loading Issues
+
+**Issue**: Model download fails
+```python
+# Use local model path
+transcriber = PingalaTranscriber(model_name="/path/to/local/model")
+
+# Or specify different Shunya Labs model
+transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim")
+```
+
+**Issue**: Alignment heads error (word timestamps)
+```python
+# This is handled automatically with fallback to no word timestamps
+# Word timestamps are supported with Shunya Labs models
+transcriber = PingalaTranscriber(model_name="shunyalabs/pingala-v1-en-verbatim")
+segments, info = transcriber.transcribe_file("audio.wav", word_timestamps=True)
+```
 
 ## Examples
 

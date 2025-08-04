@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pingala-shunya"
-version = "0.1.5"
+version = "0.1.6"
 authors = [
     {name = "Shunya Labs", email = "0@shunyalabs.ai"},
 ]
@@ -30,6 +30,11 @@ dependencies = [
     "faster-whisper>=0.10.0",
     "torch>=1.9.0",
     "torchaudio>=0.9.0",
+    "transformers==4.52.4",
+    "ctranslate2==4.4.0",
+    "librosa>=0.10.0",
+    "datasets>=2.0.0",
+    "numpy>=1.21.0",
 ]
 
 [project.urls]
@@ -48,25 +53,8 @@ dev = [
     "mypy>=0.900",
 ]
 
-# Backend-specific dependencies
-transformers = [
-    "transformers>=4.25.0",
-    "librosa>=0.10.0",
-    "datasets>=2.0.0",
-]
-
-# All backends
-all = [
-    "transformers>=4.25.0",
-    "librosa>=0.10.0",
-    "datasets>=2.0.0",
-]
-
-# Complete installation with all features
+# Complete installation with development features
 complete = [
-    "transformers>=4.25.0",
-    "librosa>=0.10.0",
-    "datasets>=2.0.0",
     "pytest>=6.0",
     "pytest-cov>=2.0",
     "black>=21.0",

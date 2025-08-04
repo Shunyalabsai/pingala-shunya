@@ -1,2 +1,0 @@
-[console_scripts]
-pingala = pingala_shunya.cli:main
