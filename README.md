@@ -1,6 +1,6 @@
 # Pingala Shunya
 
-A comprehensive speech transcription package by **ShunyaLabs AI** supporting **ct2 (CTranslate2)** and **transformers** backends. Get superior transcription quality with unified API and advanced features.
+A comprehensive speech transcription package by **Shunya Labs AI** supporting **ct2 (CTranslate2)** and **transformers** backends. Get superior transcription quality with unified API and advanced features.
 
 ## Overview
 
