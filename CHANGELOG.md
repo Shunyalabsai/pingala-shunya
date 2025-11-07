@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7] - 2025-11-07
+
+### Changed
+- Bumped package version to prepare the next PyPI release triggered from GitHub
+  releases.
+- Updated the automated PyPI workflow to validate and publish build artifacts
+  during each release event.
+
 ## [0.1.5] - 2025-07-25
 
 ### Fixed
