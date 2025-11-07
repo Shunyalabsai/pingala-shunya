@@ -1,0 +1,47 @@
+name: pingala-shunya
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python version
+  - python>=3.8,<3.13
+  
+  # Core dependencies
+  - pip
+  - setuptools>=61.0
+  - wheel
+  
+  # PyTorch and related (from pytorch channel)
+  - pytorch>=1.9.0
+  - torchaudio>=0.9.0
+  - cudatoolkit=12.1  # For GPU support (use cudatoolkit=11.8 for CUDA 11)
+  
+  # Audio processing
+  - numpy>=1.21.0
+  - librosa>=0.10.0
+  - ffmpeg  # Required for audio processing
+  
+  # Scientific computing
+  - scipy
+  
+  # Pip dependencies (not available in conda or need specific versions)
+  - pip:
+    # Transcription backends
+    - faster-whisper>=0.10.0
+    - transformers==4.52.4
+    - ctranslate2==4.4.0
+    - datasets>=2.0.0
+    
+    # Development dependencies (optional)
+    - pytest>=6.0
+    - pytest-cov>=2.0
+    - black>=21.0
+    - flake8>=3.8
+    - mypy>=0.900
+    
+    # CUDA support libraries (Linux only, uncomment if needed)
+    # - nvidia-cublas-cu12
+    # - nvidia-cudnn-cu12==9.*
+

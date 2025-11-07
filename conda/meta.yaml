@@ -1,0 +1,73 @@
+{% set name = "pingala-shunya" %}
+{% set version = "0.1.6" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: .
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  entry_points:
+    - pingala = pingala_shunya.cli:main
+
+requirements:
+  host:
+    - python >=3.8,<3.13
+    - pip
+    - setuptools >=61.0
+    - wheel
+  run:
+    - python >=3.8,<3.13
+    - pytorch >=1.9.0
+    - torchaudio >=0.9.0
+    - numpy >=1.21.0
+    - librosa >=0.10.0
+    - scipy
+    - ffmpeg
+    # Pip dependencies
+    - faster-whisper >=0.10.0
+    - transformers ==4.52.4
+    - ctranslate2 ==4.4.0
+    - datasets >=2.0.0
+
+test:
+  imports:
+    - pingala_shunya
+    - pingala_shunya.transcriber
+    - pingala_shunya.cli
+  commands:
+    - pingala --help
+  requires:
+    - pytest >=6.0
+
+about:
+  home: https://shunyalabs.ai
+  license: MIT
+  license_file: LICENSE
+  summary: Speech transcription package by Shunya Labs with ct2 and transformers backends
+  description: |
+    A comprehensive speech transcription package by Shunya Labs supporting 
+    ct2 (CTranslate2) and transformers backends. Get superior transcription 
+    quality with unified API and advanced features.
+    
+    Features:
+    - CT2 Backend: High-performance CTranslate2 optimization (default)
+    - Transformers Backend: Hugging Face models and latest research
+    - Auto-Detection: Automatically selects the best backend
+    - Word-Level Timestamps: Precise timing for individual words
+    - Confidence Scores: Quality metrics for transcription
+    - Voice Activity Detection (VAD): Filter out silence
+    - Language Detection: Automatic language identification
+    - Multiple Output Formats: Text, SRT subtitles, and WebVTT
+  doc_url: https://shunyalabs.ai/pingala-shunya
+  dev_url: https://github.com/Shunyalabsai/pingala-shunya
+
+extra:
+  recipe-maintainers:
+    - shunyalabs
+

@@ -40,8 +40,8 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://shunyalabs.ai"
 "Documentation" = "https://shunyalabs.ai/pingala-shunya"
-"Bug Reports" = "https://github.com/shunyalabs/pingala-shunya/issues"
-"Source" = "https://github.com/shunyalabs/pingala-shunya"
+"Bug Reports" = "https://github.com/Shunyalabsai/pingala-shunya/issues"
+"Source" = "https://github.com/Shunyalabsai/pingala-shunya"
 
 [project.optional-dependencies]
 # Development dependencies
